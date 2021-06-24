@@ -1,0 +1,320 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: newsproject
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  environment:
+    tableName: ${self:custom.tableName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: "*"
+
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true
+
+custom:
+  tableName: newsDemoAPI
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  patterns:
+#    - '!exclude-me.js'
+#    - '!exclude-me-dir/**'
+#    - include-me.js
+#    - include-me-dir/**
+
+functions:
+  getAllNews:
+    handler: lambdas/endpoints/getAllNews.handler
+    events:
+      - http:
+          path: get-allNews/{ID}
+          method: GET
+          cors: true
+
+  getNewsByID:
+    handler: lambdas/endpoints/getNewsByID.handler
+    events:
+      - http:
+          path: get-newsBy-ID/{ID}
+          method: GET
+          cors: true
+  
+  deleteNewsByID:
+    handler: lambdas/endpoints/deleteNewsByID.handler
+    events:
+      - http:
+          path: delete-newsBy-ID/{ID}
+          method: DELETE
+          cors: true
+  
+  createNews:
+    handler: lambdas/endpoints/createNews.handler
+    events:
+      - http:
+          path: createNews
+          method: POST
+          cors: true
+  
+  getNewsByCity:
+    handler: lambdas/endpoints/getNewsByCity.handler
+    events:
+      - http:
+          path: get-newsBy-City/{city}
+          method: GET
+          cors: true
+  
+  getNewsByState:
+    handler: lambdas/endpoints/getNewsByState.handler
+    events:
+      - http:
+          path: get-newsBy-State/{state}
+          method: GET
+          cors: true
+  
+  getNewsByAuthor:
+    handler: lambdas/endpoints/getNewsByAuthor.handler
+    events:
+      - http:
+          path: get-newsBy-Author/{author}
+          method: GET
+          cors: true
+  
+  getNewsByCityHighlight:
+    handler: lambdas/endpoints/getNewsByCityHighlight.handler
+    events:
+      - http:
+          path: get-newsBy-CityHighlight/{city}
+          method: GET
+          cors: true
+  
+  getNewsByStateHighlight:
+    handler: lambdas/endpoints/getNewsByStateHighlight.handler
+    events:
+      - http:
+          path: get-newsBy-StateHighlight/{state}
+          method: GET
+          cors: true
+  
+  getNewsByAuthorHighlight:
+    handler: lambdas/endpoints/getNewsByAuthorHighlight.handler
+    events:
+      - http:
+          path: get-newsBy-AuthorHighlight/{author}
+          method: GET
+          cors: true
+
+  getCityTypeNews:
+    handler: lambdas/endpoints/getCityTypeNews.handler
+    events:
+      - http:
+          path: get-newsBy-CityTypeNews/{city}/{typeNews}
+          method: GET
+          cors: true
+
+  getStateTypeNews:
+    handler: lambdas/endpoints/getStateTypeNews.handler
+    events:
+      - http:
+          path: get-newsBy-StateTypeNews/{state}/{typeNews}
+          method: GET
+          cors: true
+  
+  getAuthorTypeNews:
+    handler: lambdas/endpoints/getAuthorTypeNews.handler
+    events:
+      - http:
+          path: get-newsBy-AuthorTypeNews/{author}/{typeNews}
+          method: GET
+          cors: true
+  
+  updateTitle:
+    handler: lambdas/endpoints/updateTitle.handler
+    events:
+      - http:
+          path: updateTitle/{ID}
+          method: PUT
+          cors: true
+  
+  updateDescription:
+    handler: lambdas/endpoints/updateDescription.handler
+    events:
+      - http:
+          path: updateDescription/{ID}
+          method: PUT
+          cors: true
+  
+  updateHighlights:
+    handler: lambdas/endpoints/updateHighlights.handler
+    events:
+      - http:
+          path: updateHighlights/{ID}
+          method: PUT
+          cors: true
+    
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+#    events:
+#      - httpApi:
+#          path: /users/create
+#          method: get
+#      - websocket: $connect
+#      - s3: ${env:BUCKET}
+#      - schedule: rate(10 minutes)
+#      - sns: greeter-topic
+#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
+#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
+#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
+#      - iot:
+#          sql: "SELECT * FROM 'some_topic'"
+#      - cloudwatchEvent:
+#          event:
+#            source:
+#              - "aws.ec2"
+#            detail-type:
+#              - "EC2 Instance State-change Notification"
+#            detail:
+#              state:
+#                - pending
+#      - cloudwatchLog: '/aws/lambda/hello'
+#      - cognitoUserPool:
+#          pool: MyUserPool
+#          trigger: PreSignUp
+#      - alb:
+#          listenerArn: arn:aws:elasticloadbalancing:us-east-1:XXXXXX:listener/app/my-load-balancer/50dc6c495c0c9188/
+#          priority: 1
+#          conditions:
+#            host: example.com
+#            path: /hello
+
+#    Define function environment variables here
+#    environment:
+#      variable2: value2
+
+# you can add CloudFormation resource templates here
+resources: # CloudFormation template syntax from here on.
+  Resources:
+    newsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: author
+            AttributeType: S
+          - AttributeName: city
+            AttributeType: S
+          # - AttributeName: description
+          #   AttributeType: S
+          # - AttributeName: highlight
+          #   AttributeType: N
+          - AttributeName: newsID
+            AttributeType: S
+          - AttributeName: state
+            AttributeType: S
+          # - AttributeName: timeStamp
+          #   AttributeType: N
+          # - AttributeName: title
+          #   AttributeType: S
+          # - AttributeName: totalShare
+          #   AttributeType: N
+          - AttributeName: typeNews
+            AttributeType: S
+          # - AttributeName: reportReason
+          #   AttributeType: M
+        KeySchema:
+          - AttributeName: newsID
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: author-typeNews-index
+            KeySchema:
+              - AttributeName: author
+                KeyType: HASH
+              - AttributeName: typeNews
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          # GlobalSecondaryIndexes:
+          - IndexName: city-typeNews-index
+            KeySchema:
+              - AttributeName: city
+                KeyType: HASH
+              - AttributeName: typeNews
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          # GlobalSecondaryIndexes:
+          - IndexName: state-typeNews-index
+            KeySchema:
+              - AttributeName: state
+                KeyType: HASH
+              - AttributeName: typeNews
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"

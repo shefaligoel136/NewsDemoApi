@@ -1,0 +1,19 @@
+{
+  "name": "newsproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shefali",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.933.0",
+    "lambda-hooks": "^0.2.1",
+    "serverless-webpack": "^5.5.1",
+    "ulid": "^2.3.0",
+    "webpack": "^5.40.0",
+    "yup": "^0.32.9"
+  }
+}
