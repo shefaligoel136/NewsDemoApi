@@ -161,6 +161,31 @@ const Dynamo = {
     };
     return documentClient.update(params).promise();
   },
+
+  // USER
+
+  async writeUser(data, TableName) {
+    if (!data.userID) {
+      throw Error("No ID on the data");
+    }
+
+    const params = {
+      TableName,
+      Item: data,
+    };
+
+    // CREATE THE REQUEST TO DOCUMENT CLIENT TO PUT THE DATA ON TABLE
+
+    const response = await documentClient.put(params).promise();
+
+    if (!response) {
+      throw Error(
+        `There was an error inserting ID OF ${data.userID} in table ${TableName}`
+      );
+    }
+
+    return data;
+  },
 };
 
 module.exports = Dynamo;
